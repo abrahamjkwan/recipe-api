@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 
@@ -16,3 +16,17 @@ class CreateTokenView(ObtainAuthToken):
     # set the renderer so we can view the endpoint in the browser
     # with the browsable api
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
+
+class ManageUserView(generics.RetrieveUpdateAPIView):
+    """Manage the authenticated user"""
+    serializer_class = UserSerializer
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    # we are overriding the get_object, typically with an API view
+    # you would link to model retrieve database items
+    def get_object(self):
+        """Retrieve and return authenticated user"""
+        # with authentication_class, user is assigned to request
+        return self.request.user
