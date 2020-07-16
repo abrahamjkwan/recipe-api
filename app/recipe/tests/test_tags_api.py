@@ -67,11 +67,20 @@ class PrivateTagsApiTests(TestCase):
         # Check that values match between res.data and serializer.data
         self.assertEqual(res.data, serializer.data)
 
-    # payload = {
-    #     'name': 'Cantonese'
-    # }
+    def test_create_tag_successful(self):
+        """Test authenticated user can create tags successfully"""
+        payload = {'name': 'Cantonese'}
+        res = self.client.post(TAGS_URL, payload)
 
-    # res = self.client.post(TAGS_URL, payload)
+        exists = Tag.objects.filter(
+            user=self.user,
+            name=payload['name']
+        ).exists()
+        self.assertTrue(exists)
 
-    # self.assertEqual(res.status_code, status.HTTP_200_OK)
-    # self.assertEqual(res.data.name, payload['name'])
+    def test_create_tag_invalid(self):
+        """Test creating a new tag with invalid payload"""
+        payload = {'name': ''}
+        res = self.client.post(TAGS_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
