@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-# view is to render viewset
+# pulling in view allows us to render viewset
 from recipe import views
 
 # the Default Router registers all the appropriate URLs
@@ -11,6 +11,7 @@ router = DefaultRouter()
 
 # register our viewset with the router
 router.register('tags', views.TagViewSet)
+router.register('ingredients', views.IngredientViewSet)
 
 # define the app name for the reverse function
 app_name = 'recipe'
