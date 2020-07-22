@@ -26,21 +26,21 @@ class IngredientSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     """Serializer for Recipe object"""
     # after we finish creating this serializer, we implement the view
+    ingredients = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Ingredient.objects.all()
+    )
+
+    tags = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Tag.objects.all()
+    )
 
     class Meta:
         model = Recipe
 
         # define primary-key related fields
         # need to define ingredients and tags as special fields
-        ingredients = serializers.PrimaryKeyRelatedField(
-            many=True,
-            queryset=Ingredient.objects.all()
-        )
-
-        tags = serializers.PrimaryKeyRelatedField(
-            many=True,
-            queryset=Ingredient.objects.all()
-        )
 
         fields = ('id', 'name', 'time_minutes', 'price',
                   'link', 'tags', 'ingredients')
@@ -49,7 +49,5 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 class RecipeDetailSerializer(RecipeSerializer):
     """Serializer for the Recipe Detail object"""
-
-    class Meta:
-        ingredients = IngredientSerializer(many=True, read_only=True)
-        Tags = TagSerializer(many=True, read_only=True)
+    ingredients = IngredientSerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
